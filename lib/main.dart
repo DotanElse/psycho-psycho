@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:psycho_psycho/pages/home.dart';
+import 'package:psycho_psycho/home.dart';
 
 void main() {
   runApp(const MyApp());

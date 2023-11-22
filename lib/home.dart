@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'pages/home_body.dart';
+import 'pages/tools_body.dart';
+import 'pages/analytics_body.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -107,33 +110,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: theme.colorScheme.primary,
       selectedItemColor: theme.colorScheme.onPrimary,
       unselectedItemColor: theme.colorScheme.onPrimary.withOpacity(0.6),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Home Screen'),
-    );
-  }
-}
-
-class ToolsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Tools Screen'),
-    );
-  }
-}
-
-class AnalyticsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Analytics Screen'),
     );
   }
 }
