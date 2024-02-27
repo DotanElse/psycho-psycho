@@ -1,0 +1,4 @@
+﻿text,A,B,C,D,correct,id,subject,category,difficulty
+Which of these best describes an array?,A data structure that shows a hierarchical behavior,Container of objects of similar types,Arrays are immutable once initialised,Array is not a data structure,B,1,Math,asdf,0
+How do you initialize an array in C?,"int arr[3] = (1,2,3);","int arr(3) = {1,2,3};","int arr[3] = {1,2,3};","int arr(3) = (1,2,3);",C,2,Hebrew,wswade,4
+How do you instantiate an array in Java?,int arr[] = new int(3);,int arr[];,int arr[] = new int[3];,int arr() = new int(3);,C,3,English,rtbe,1
