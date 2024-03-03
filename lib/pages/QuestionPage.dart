@@ -1,8 +1,6 @@
-// question_page.dart
 import 'package:flutter/material.dart';
 import 'package:psycho_psycho/utils/question.dart';
 import 'package:psycho_psycho/utils/QuestionLoader.dart';
-// question_page.dart
 
 class QuestionPage extends StatefulWidget {
   @override
@@ -12,32 +10,32 @@ class QuestionPage extends StatefulWidget {
 class _QuestionPageState extends State<QuestionPage> {
   late Question currentQuestion;
   late QuestionLoader questionLoader;
+  String selectedAnswer = '';
+  bool answerSubmitted = false;
 
   @override
   void initState() {
     super.initState();
     questionLoader = QuestionLoader();
-    // Load questions when the page is initialized
     loadQuestions();
   }
 
   void loadQuestions() async {
-    // Load questions using the QuestionLoader
     await questionLoader.loadQuestions();
-    // Load a random question after questions are loaded
     loadRandomQuestion();
   }
 
   void loadRandomQuestion() {
-    // Load a random question using the QuestionLoader
     currentQuestion = questionLoader.getRandomQuestion();
-    setState(() {});
+    setState(() {
+      answerSubmitted = false; // Reset answer submitted state
+      selectedAnswer = ''; // Reset selected answer
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     if (currentQuestion == null) {
-      // Handle the case when a question is not loaded yet
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -52,39 +50,26 @@ class _QuestionPageState extends State<QuestionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display the question
             Text(
               currentQuestion.text,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
-            // Display the answer options with radio buttons
             Column(
               children: [
-                buildAnswerOption(currentQuestion.optionA),
-                buildAnswerOption(currentQuestion.optionB),
-                buildAnswerOption(currentQuestion.optionC),
-                buildAnswerOption(currentQuestion.optionD),
+                buildAnswerOption(currentQuestion.optionA, 'A'),
+                buildAnswerOption(currentQuestion.optionB, 'B'),
+                buildAnswerOption(currentQuestion.optionC, 'C'),
+                buildAnswerOption(currentQuestion.optionD, 'D'),
               ],
             ),
             SizedBox(height: 16.0),
-            // Display a submit button
-            ElevatedButton(
-              onPressed: () {
-                // Handle the submission logic here
-                // For example, check if the selected option is correct
-                if (currentQuestion.correct == 'A' && currentQuestion.correct == 'A') {
-                  // Correct answer
-                  print('Correct!');
-                } else {
-                  // Incorrect answer
-                  print('Incorrect!');
-                }
-
-                // Load a new random question
-                loadRandomQuestion();
-              },
-              child: Text('Submit'),
+            SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
+                child: Text(answerSubmitted ? 'Next Question' : 'Submit'),
+              ),
             ),
           ],
         ),
@@ -92,14 +77,36 @@ class _QuestionPageState extends State<QuestionPage> {
     );
   }
 
-  Widget buildAnswerOption(String option) {
+  void submitAnswer() {
+    setState(() {
+      answerSubmitted = true;
+    });
+  }
+
+  Widget buildAnswerOption(String option, String optionLetter) {
+    Color? color;
+    if (answerSubmitted) {
+      if (optionLetter == currentQuestion.correct) {
+        color = Colors.green;
+      } else if (optionLetter == selectedAnswer) {
+        color = Colors.red;
+      }
+    }
+
     return ListTile(
-      title: Text(option),
+      title: Text(
+        option,
+        style: TextStyle(color: color),
+      ),
       leading: Radio(
-        value: option,
-        groupValue: currentQuestion.correct,
-        onChanged: (value) {
-          // Handle the selection logic if needed
+        value: optionLetter,
+        groupValue: selectedAnswer,
+        onChanged: answerSubmitted
+            ? null
+            : (value) {
+          setState(() {
+            selectedAnswer = value.toString();
+          });
         },
       ),
     );
