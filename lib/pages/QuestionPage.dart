@@ -45,34 +45,41 @@ class _QuestionPageState extends State<QuestionPage> {
       appBar: AppBar(
         title: Text('Question Page'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              currentQuestion.text,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10.0),
+            height: MediaQuery.of(context).size.height * 0.2,
+            child: Image.asset(
+              'assets/questions_pics/${currentQuestion.id}.jpg', // Adjust the path as needed
+              fit: BoxFit.contain,
             ),
-            SizedBox(height: 16.0),
-            Column(
-              children: [
-                buildAnswerOption(currentQuestion.optionA, 'A'),
-                buildAnswerOption(currentQuestion.optionB, 'B'),
-                buildAnswerOption(currentQuestion.optionC, 'C'),
-                buildAnswerOption(currentQuestion.optionD, 'D'),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
-                child: Text(answerSubmitted ? 'Next Question' : 'Submit'),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Your answer options and submit button here
+                  buildAnswerOption(currentQuestion.optionA, 'A'),
+                  buildAnswerOption(currentQuestion.optionB, 'B'),
+                  buildAnswerOption(currentQuestion.optionC, 'C'),
+                  buildAnswerOption(currentQuestion.optionD, 'D'),
+                  SizedBox(height: 16.0),
+                  SizedBox(
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
+                      child: Text(answerSubmitted ? 'Next Question' : 'Submit'),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -59,6 +59,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/questions.csv
+    - assets/questions_pics/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
