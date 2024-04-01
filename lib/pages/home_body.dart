@@ -1,68 +1,68 @@
-// home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:psycho_psycho/pages/QuestionPage.dart';
-import 'package:psycho_psycho/pages/MathPage.dart';
-import 'package:psycho_psycho/pages/HebrewPage.dart';
-import 'package:psycho_psycho/pages/EnglishPage.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Large container at the top (30% of screen height, 90% width with margin)
-        GestureDetector(
-          onTap: () {
-            // Navigate to the QuestionPage when the blue container is tapped
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => QuestionPage()),
-            );
-          },
-          child: Container(
-            margin: EdgeInsets.all(16.0), // Adjust the margin as needed
-            height: MediaQuery.of(context).size.height * 0.3,
-            width: MediaQuery.of(context).size.width * 0.9,
-            color: Colors.blue, // Set the color as needed
-            // Add your content inside the large container
+        // Text block
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Text(
+            'Choose a subject:',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        SizedBox(height: 16.0), // Add some spacing between the large container and the smaller blocks
-        // Three smaller colored blocks
         Expanded(
+
           child: Column(
             children: [
               GestureDetector(
                 onTap: () {
-                  // Navigate to the MathPage when the red block is tapped
+                  // Navigate to the QuestionPage with subject 'm' when the red block is tapped
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MathPage()),
+                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'a')),
                   );
                 },
-                child: ColoredBlock(color: Colors.red),
+                child: ColoredBlock(color: Colors.black, description: "תרגול כל השאלות", imagePath: "assets/PLACEHOLDER.jpg",),
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 10,),
               GestureDetector(
                 onTap: () {
-                  // Navigate to the HebrewPage when the green block is tapped
+                  // Navigate to the QuestionPage with subject 'm' when the red block is tapped
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HebrewPage()),
+                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'm')),
                   );
                 },
-                child: ColoredBlock(color: Colors.green),
+                child: ColoredBlock(color: Colors.red, description: "תרגול שאלות במתמטיקה", imagePath: "assets/PLACEHOLDER.jpg",),
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 10,),
               GestureDetector(
                 onTap: () {
-                  // Navigate to the EnglishPage when the yellow block is tapped
+                  // Navigate to the QuestionPage with subject 'h' when the green block is tapped
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EnglishPage()),
+                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'h')),
                   );
                 },
-                child: ColoredBlock(color: Colors.yellow),
+                child: ColoredBlock(color: Colors.green, description: "תרגול שאלות בעברית", imagePath: "assets/PLACEHOLDER.jpg",),
+              ),
+              SizedBox(height: 10,),
+              GestureDetector(
+                onTap: () {
+                  // Navigate to the QuestionPage with subject 'e' when the yellow block is tapped
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'e')),
+                  );
+                },
+                child: ColoredBlock(color: Colors.yellow, description: "תרגול שאלות באנגלית", imagePath: "assets/PLACEHOLDER.jpg",),
               ),
             ],
           ),
@@ -74,15 +74,49 @@ class HomeScreen extends StatelessWidget {
 
 class ColoredBlock extends StatelessWidget {
   final Color color;
+  final String description;
+  final String imagePath;
 
-  const ColoredBlock({Key? key, required this.color}) : super(key: key);
+  const ColoredBlock({
+    Key? key,
+    required this.color,
+    required this.description,
+    required this.imagePath,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100.0, // Set the height as needed
+      height: MediaQuery.sizeOf(context).height*0.1, // Set the height as needed
       color: color,
-      // Add your content inside each colored block
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 15.0),
+            width: 100.0, // Set fixed width for the image
+            height: 50.0, // Set fixed height for the image
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.cover, // Adjust image fit as needed
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: Text(
+              description,
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl, // Right-to-left text direction
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+

@@ -60,6 +60,7 @@ flutter:
   assets:
     - assets/questions.csv
     - assets/questions_pics/
+    - assets/PLACEHOLDER.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

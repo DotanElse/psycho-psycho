@@ -3,6 +3,10 @@ import 'package:psycho_psycho/utils/question.dart';
 import 'package:psycho_psycho/utils/QuestionLoader.dart';
 
 class QuestionPage extends StatefulWidget {
+  final String subject;
+
+  QuestionPage({required this.subject});
+
   @override
   _QuestionPageState createState() => _QuestionPageState();
 }
@@ -21,7 +25,7 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   void loadQuestions() async {
-    await questionLoader.loadQuestions('a');
+    await questionLoader.loadQuestions(widget.subject);
     loadRandomQuestion();
   }
 
@@ -50,7 +54,7 @@ class _QuestionPageState extends State<QuestionPage> {
         children: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
-            height: MediaQuery.of(context).size.height * 0.2,
+            height: MediaQuery.of(context).size.height * 0.3,
             child: Image.asset(
               'assets/questions_pics/${currentQuestion!.id}.jpg', // Adjust the path as needed
               fit: BoxFit.contain,
@@ -105,21 +109,21 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Widget buildAnswerOption(String optionLetter) {
-    double buttonSize = MediaQuery.of(context).size.width * 0.05; // Adjust size as needed
+    double buttonSize = MediaQuery.of(context).size.width * 0.4; // Adjust size as needed
     Color selectedBorderColor = Colors.black; // Border color for selected button
     double borderWidth = 4.0; // Border width
     Color? disabledColor = Colors.grey;
     if(answerSubmitted)
+    {
+      if(optionLetter == selectedAnswer)
       {
-        if(optionLetter == selectedAnswer)
-          {
-            disabledColor = Colors.red;
-          }
-        if(optionLetter == currentQuestion!.correct)
-          {
-            disabledColor = Colors.green;
-          }
+        disabledColor = Colors.red;
       }
+      if(optionLetter == currentQuestion!.correct)
+      {
+        disabledColor = Colors.green;
+      }
+    }
 
 
     return SizedBox(
