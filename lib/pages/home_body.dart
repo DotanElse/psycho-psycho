@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:psycho_psycho/pages/QuestionPage.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,18 +19,21 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         Expanded(
-
           child: Column(
             children: [
               GestureDetector(
                 onTap: () {
-                  // Navigate to the QuestionPage with subject 'm' when the red block is tapped
+                  // Navigate to the QuestionPage with subject 'a' when the black block is tapped
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => QuestionPage(subject: 'a')),
                   );
                 },
-                child: ColoredBlock(color: Colors.black, description: "תרגול כל השאלות", imagePath: "assets/PLACEHOLDER.jpg",),
+                child: ColoredBlock(
+                  color: Colors.lightBlue,
+                  description: "תרגול כל השאלות",
+                  svgPath: "assets/icons/all.svg",
+                ),
               ),
               SizedBox(height: 10,),
               GestureDetector(
@@ -40,7 +44,11 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => QuestionPage(subject: 'm')),
                   );
                 },
-                child: ColoredBlock(color: Colors.red, description: "תרגול שאלות במתמטיקה", imagePath: "assets/PLACEHOLDER.jpg",),
+                child: ColoredBlock(
+                  color: Colors.orangeAccent,
+                  description: "תרגול שאלות במתמטיקה",
+                  svgPath: "assets/icons/math.svg",
+                ),
               ),
               SizedBox(height: 10,),
               GestureDetector(
@@ -51,7 +59,11 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => QuestionPage(subject: 'h')),
                   );
                 },
-                child: ColoredBlock(color: Colors.green, description: "תרגול שאלות בעברית", imagePath: "assets/PLACEHOLDER.jpg",),
+                child: ColoredBlock(
+                  color: Colors.lightGreen,
+                  description: "תרגול שאלות בעברית",
+                  svgPath: "assets/icons/hebrew.svg",
+                ),
               ),
               SizedBox(height: 10,),
               GestureDetector(
@@ -62,7 +74,11 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => QuestionPage(subject: 'e')),
                   );
                 },
-                child: ColoredBlock(color: Colors.yellow, description: "תרגול שאלות באנגלית", imagePath: "assets/PLACEHOLDER.jpg",),
+                child: ColoredBlock(
+                  color: Colors.redAccent,
+                  description: "תרגול שאלות באנגלית",
+                  svgPath: "assets/icons/english.svg",
+                ),
               ),
             ],
           ),
@@ -75,48 +91,49 @@ class HomeScreen extends StatelessWidget {
 class ColoredBlock extends StatelessWidget {
   final Color color;
   final String description;
-  final String imagePath;
+  final String svgPath;
 
   const ColoredBlock({
     Key? key,
     required this.color,
     required this.description,
-    required this.imagePath,
+    required this.svgPath,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.sizeOf(context).height*0.1, // Set the height as needed
-      color: color,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 15.0),
-            width: 100.0, // Set fixed width for the image
-            height: 50.0, // Set fixed height for the image
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover, // Adjust image fit as needed
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: Text(
-              description,
-              textAlign: TextAlign.center,
-              textDirection: TextDirection.rtl, // Right-to-left text direction
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20.0), // Set the radius for rounded corners
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.1, // Set the height as needed
+        color: color,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: SvgPicture.asset(
+                svgPath,
+                width: 50.0, // Set fixed width for the SVG
+                height: 50.0, // Set fixed height for the SVG
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                textDirection: TextDirection.rtl, // Right-to-left text direction
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
