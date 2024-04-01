@@ -18,18 +18,12 @@ class QuestionLoader {
       // Parse each CSV line into a Question object
       _questions = lines.map((line) {
         var questionFields = line.split(',');
-        print(questionFields);
+
         return Question(
-          text: questionFields[0],
-          optionA: questionFields[1],
-          optionB: questionFields[2],
-          optionC: questionFields[3],
-          optionD: questionFields[4],
-          correct: questionFields[5],
-          id: questionFields[6],
-          subject: questionFields[7],
-          category: questionFields[8],
-          difficulty: questionFields[9],
+          id: questionFields[0],
+          correct: questionFields[1],
+          difficulty: questionFields[2],
+          subject: questionFields[3],
         );
       }).toList();
     } catch (e) {
