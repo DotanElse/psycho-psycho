@@ -6,7 +6,7 @@ import 'question.dart';
 class QuestionLoader {
   List<Question> _questions = [];
 
-  Future<void> loadQuestions() async {
+  Future<void> loadQuestions(String questionType) async {
     try {
       // Load the CSV file from the assets
       String csvString = await rootBundle.loadString('assets/questions.csv');
@@ -15,17 +15,23 @@ class QuestionLoader {
       // Remove the header line (assuming the header is present in the first line)
       lines.removeAt(0);
 
+      _questions.clear(); // Clear the list before adding new questions
+
       // Parse each CSV line into a Question object
-      _questions = lines.map((line) {
+      lines.forEach((line) {
         var questionFields = line.split(',');
 
-        return Question(
-          id: questionFields[0],
-          correct: questionFields[1],
-          difficulty: questionFields[2],
-          subject: questionFields[3],
-        );
-      }).toList();
+        // Check if the subject matches the specified questionType
+        if (questionType == 'a' || questionFields[3].trim() == questionType.trim()) {
+          _questions.add(Question(
+            id: questionFields[0],
+            correct: questionFields[1],
+            difficulty: questionFields[2],
+            subject: questionFields[3],
+          ));
+        }
+      });
+
     } catch (e) {
       print('Error loading questions: $e');
       // Handle the error as needed

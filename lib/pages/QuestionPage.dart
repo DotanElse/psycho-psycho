@@ -8,7 +8,7 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> {
-  late Question currentQuestion;
+  Question? currentQuestion;
   late QuestionLoader questionLoader;
   String selectedAnswer = '';
   bool answerSubmitted = false;
@@ -21,7 +21,7 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   void loadQuestions() async {
-    await questionLoader.loadQuestions();
+    await questionLoader.loadQuestions('a');
     loadRandomQuestion();
   }
 
@@ -52,7 +52,7 @@ class _QuestionPageState extends State<QuestionPage> {
             margin: EdgeInsets.symmetric(vertical: 10.0),
             height: MediaQuery.of(context).size.height * 0.2,
             child: Image.asset(
-              'assets/questions_pics/${currentQuestion.id}.jpg', // Adjust the path as needed
+              'assets/questions_pics/${currentQuestion!.id}.jpg', // Adjust the path as needed
               fit: BoxFit.contain,
             ),
           ),
@@ -105,7 +105,7 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Widget buildAnswerOption(String optionLetter) {
-    double buttonSize = MediaQuery.of(context).size.width * 0.4; // Adjust size as needed
+    double buttonSize = MediaQuery.of(context).size.width * 0.05; // Adjust size as needed
     Color selectedBorderColor = Colors.black; // Border color for selected button
     double borderWidth = 4.0; // Border width
     Color? disabledColor = Colors.grey;
@@ -115,7 +115,7 @@ class _QuestionPageState extends State<QuestionPage> {
           {
             disabledColor = Colors.red;
           }
-        if(optionLetter == currentQuestion.correct)
+        if(optionLetter == currentQuestion!.correct)
           {
             disabledColor = Colors.green;
           }
