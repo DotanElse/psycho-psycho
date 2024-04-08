@@ -16,6 +16,9 @@ class _QuestionPageState extends State<QuestionPage> {
   late QuestionLoader questionLoader;
   String selectedAnswer = '';
   bool answerSubmitted = false;
+  double scaleFactor = 1.0;
+
+  TransformationController transformationController = TransformationController();
 
   @override
   void initState() {
@@ -32,6 +35,7 @@ class _QuestionPageState extends State<QuestionPage> {
   void loadRandomQuestion() {
     currentQuestion = questionLoader.getRandomQuestion();
     setState(() {
+      transformationController.value = Matrix4.identity(); // Reset transformation
       answerSubmitted = false; // Reset answer submitted state
       selectedAnswer = ''; // Reset selected answer
     });
@@ -47,53 +51,51 @@ class _QuestionPageState extends State<QuestionPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Question Page'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10.0),
-            height: MediaQuery.of(context).size.height * 0.3,
+          InteractiveViewer(
+            transformationController: transformationController,
+            constrained: true, // Locks the movement in the viewport
             child: Image.asset(
-              'assets/questions_pics/${currentQuestion!.id}.jpg', // Adjust the path as needed
+              height: MediaQuery.sizeOf(context).height*0.3,
+              'assets/questions_pics/${currentQuestion!.id}.jpg',
               fit: BoxFit.contain,
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Row for options A and B
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildAnswerOption('1'),
-                      buildAnswerOption('2'),
-                    ],
-                  ),
-                  SizedBox(height: 16.0), // Adjust the spacing between rows
-                  // Row for options C and D
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildAnswerOption('3'),
-                      buildAnswerOption('4'),
-                    ],
-                  ),
-                  SizedBox(height: 16.0),
-                  Center(
-                    child: SizedBox(
-                      width: 150,
-                      child: ElevatedButton(
-                        onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
-                        child: Text(answerSubmitted ? 'Next Question' : 'Submit'),
-                      ),
-                    ),
-                  ),
-                ],
+          SizedBox(height: 16.0), // Adjust the spacing between the image and buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                child: buildAnswerOption('1'),
+              ),
+              SizedBox(
+                child: buildAnswerOption('2'),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0), // Adjust the spacing between rows
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                child: buildAnswerOption('3'),
+              ),
+              SizedBox(
+                child: buildAnswerOption('4'),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0), // Adjust the spacing before the submit button
+          Center(
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).height*0.2,
+              height: MediaQuery.sizeOf(context).height*0.05,
+              child: ElevatedButton(
+                onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
+                child: Text(answerSubmitted ? 'שאלה הבאה' : 'שליחה'),
               ),
             ),
           ),
@@ -105,54 +107,48 @@ class _QuestionPageState extends State<QuestionPage> {
   void submitAnswer() {
     setState(() {
       answerSubmitted = true;
+      transformationController.value = Matrix4.identity(); // Reset transformation
     });
   }
 
   Widget buildAnswerOption(String optionLetter) {
-    double buttonSize = MediaQuery.of(context).size.width * 0.4; // Adjust size as needed
     Color selectedBorderColor = Colors.black; // Border color for selected button
     double borderWidth = 4.0; // Border width
     Color? disabledColor = Colors.grey;
-    if(answerSubmitted)
-    {
-      if(optionLetter == selectedAnswer)
-      {
+    if (answerSubmitted) {
+      if (optionLetter == selectedAnswer) {
         disabledColor = Colors.red;
       }
-      if(optionLetter == currentQuestion!.correct)
-      {
+      if (optionLetter == currentQuestion!.correct) {
         disabledColor = Colors.green;
       }
     }
 
-
-    return SizedBox(
-      width: buttonSize,
-      height: buttonSize,
-      child: ElevatedButton(
-        onPressed: answerSubmitted ? null : () {
-          setState(() {
-            selectedAnswer = optionLetter;
-          });
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer, // Use your preferred color here
-          disabledBackgroundColor: disabledColor,
-          minimumSize: Size(buttonSize, buttonSize),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(buttonSize * 0.3), // Adjust borderRadius as needed
-            side: BorderSide(
-              color: selectedAnswer == optionLetter ? selectedBorderColor : Colors.transparent,
-              width: borderWidth,
-            ),
+    return ElevatedButton(
+      onPressed: answerSubmitted
+          ? null
+          : () {
+        setState(() {
+          selectedAnswer = optionLetter;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer, // Use your preferred color here
+        disabledBackgroundColor: disabledColor,
+        minimumSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.width * 0.3), // Adjust button size as needed
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.05), // Adjust borderRadius as needed
+          side: BorderSide(
+            color: selectedAnswer == optionLetter ? selectedBorderColor : Colors.transparent,
+            width: borderWidth,
           ),
         ),
-        child: Text(
-          optionLetter,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-            fontSize: buttonSize * 0.5, // Adjust fontSize as needed
-          ),
+      ),
+      child: Text(
+        optionLetter,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          fontSize: MediaQuery.of(context).size.width * 0.15, // Adjust fontSize as needed
         ),
       ),
     );
