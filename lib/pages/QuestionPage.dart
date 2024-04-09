@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:psycho_psycho/utils/question.dart';
 import 'package:psycho_psycho/utils/QuestionLoader.dart';
@@ -17,6 +18,8 @@ class _QuestionPageState extends State<QuestionPage> {
   String selectedAnswer = '';
   bool answerSubmitted = false;
   double scaleFactor = 1.0;
+  int _start = 60;
+  late Timer _timer;
 
   TransformationController transformationController = TransformationController();
 
@@ -25,6 +28,13 @@ class _QuestionPageState extends State<QuestionPage> {
     super.initState();
     questionLoader = QuestionLoader();
     loadQuestions();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void loadQuestions() async {
@@ -38,7 +48,31 @@ class _QuestionPageState extends State<QuestionPage> {
       transformationController.value = Matrix4.identity(); // Reset transformation
       answerSubmitted = false; // Reset answer submitted state
       selectedAnswer = ''; // Reset selected answer
+      _start = 60; // Reset timer value
     });
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if(answerSubmitted) {
+          // Do nothing
+        }
+        else if (_start == 0) {
+          _start = 60; // Reset the timer to 60 seconds
+          setState(() {
+            answerSubmitted = true; // Automatically submit when timer expires
+            transformationController.value = Matrix4.identity(); // Reset transformation
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -51,6 +85,17 @@ class _QuestionPageState extends State<QuestionPage> {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text('Question Page'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+              value: _start / 60, // Use _start as the countdown progress
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,7 +104,7 @@ class _QuestionPageState extends State<QuestionPage> {
             transformationController: transformationController,
             constrained: true, // Locks the movement in the viewport
             child: Image.asset(
-              height: MediaQuery.sizeOf(context).height*0.3,
+              height: MediaQuery.sizeOf(context).height * 0.3,
               'assets/questions_pics/${currentQuestion!.id}.jpg',
               fit: BoxFit.contain,
             ),
@@ -91,8 +136,8 @@ class _QuestionPageState extends State<QuestionPage> {
           SizedBox(height: 16.0), // Adjust the spacing before the submit button
           Center(
             child: SizedBox(
-              width: MediaQuery.sizeOf(context).height*0.2,
-              height: MediaQuery.sizeOf(context).height*0.05,
+              width: MediaQuery.sizeOf(context).height * 0.2,
+              height: MediaQuery.sizeOf(context).height * 0.05,
               child: ElevatedButton(
                 onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
                 child: Text(answerSubmitted ? 'שאלה הבאה' : 'שליחה'),
