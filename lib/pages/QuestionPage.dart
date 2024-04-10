@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:psycho_psycho/utils/question.dart';
 import 'package:psycho_psycho/utils/QuestionLoader.dart';
+import 'package:psycho_psycho/utils/UserData.dart';
 
 class QuestionPage extends StatefulWidget {
   final String subject;
@@ -62,10 +63,7 @@ class _QuestionPageState extends State<QuestionPage> {
         }
         else if (_start == 0) {
           _start = 60; // Reset the timer to 60 seconds
-          setState(() {
-            answerSubmitted = true; // Automatically submit when timer expires
-            transformationController.value = Matrix4.identity(); // Reset transformation
-          });
+          submitAnswer();
         } else {
           setState(() {
             _start--;
@@ -152,6 +150,9 @@ class _QuestionPageState extends State<QuestionPage> {
   void submitAnswer() {
     setState(() {
       answerSubmitted = true;
+      UserData.updateScore(widget.subject, selectedAnswer == currentQuestion!.correct);
+      //Collect statistics here
+      print("Answer Submitted");
       transformationController.value = Matrix4.identity(); // Reset transformation
     });
   }
