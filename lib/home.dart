@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/home_body.dart';
-import 'pages/tools_body.dart';
 import 'pages/analytics_body.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,7 +22,6 @@ class _HomePageState extends State<HomePage> {
         controller: _pageController,
         children: [
           HomeScreen(),
-          ToolsScreen(),
           AnalyticsScreen(),
         ],
         onPageChanged: (index) {
@@ -44,42 +42,6 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: theme.colorScheme.primary,
       centerTitle: true,
-      leading: GestureDetector(
-        onTap: () {},
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: FittedBox(
-            child: Icon(
-              Icons.analytics,
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            width: (AppBar().preferredSize.height - 20),
-            height: (AppBar().preferredSize.height - 20),
-            child: FittedBox(
-              child: Icon(
-                Icons.settings,
-                color: theme.colorScheme.onPrimaryContainer,
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 
@@ -97,10 +59,6 @@ class _HomePageState extends State<HomePage> {
         BottomNavigationBarItem(
           icon: Icon(Icons.home, color: theme.colorScheme.onPrimary),
           label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.book, color: theme.colorScheme.onPrimary),
-          label: 'Tools',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.analytics, color: theme.colorScheme.onPrimary),
