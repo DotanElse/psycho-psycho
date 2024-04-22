@@ -67,4 +67,14 @@ class UserData {
         (prefs.getInt(totalQuestionsHebrewKey) ?? 0) +
         (prefs.getInt(totalQuestionsEnglishKey) ?? 0)];
   }
+
+  static Future<void> resetStatistics() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(totalQuestionsMathKey);
+    await prefs.remove(totalCorrectMathKey);
+    await prefs.remove(totalQuestionsHebrewKey);
+    await prefs.remove(totalCorrectHebrewKey);
+    await prefs.remove(totalQuestionsEnglishKey);
+    await prefs.remove(totalCorrectEnglishKey);
+  }
 }
