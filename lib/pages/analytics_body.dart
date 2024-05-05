@@ -7,12 +7,36 @@ class AnalyticsScreen extends StatefulWidget {
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  Future<List<int>>? _userDataFuture;
+
   @override
+  void initState() {
+    super.initState();
+    _refreshUserData();
+  }
+
+  void _refreshUserData() {
+    setState(() {
+      _userDataFuture = _getUserData();
+    });
+  }
+
+  Future<List<int>> _getUserData() async {
+    final mathData = await UserData.getScore('m');
+    final hebrewData = await UserData.getScore('h');
+    final englishData = await UserData.getScore('e');
+    return [
+      ...mathData,
+      ...hebrewData,
+      ...englishData,
+    ];
+  }
+
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: FutureBuilder<List<int>>(
-        future: _getUserData(),
+        future: _userDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -50,22 +74,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     );
   }
 
-  Future<List<int>> _getUserData() async {
-    final mathData = await UserData.getScore('m');
-    final hebrewData = await UserData.getScore('h');
-    final englishData = await UserData.getScore('e');
-    return [
-      ...mathData,
-      ...hebrewData,
-      ...englishData,
-    ];
-  }
-
   Widget _buildSubjectRow(BuildContext context, String subject, int correct, int totalQuestions) {
     final percentage = totalQuestions == 0 ? 0 : (correct / totalQuestions) * 100;
     return ListTile(
       title: Text('$subject: $correct/$totalQuestions'),
-      subtitle: Text('אחוז: ${percentage.toStringAsFixed(2)}%'),
+      subtitle: Text('אחוז הצלחה: ${percentage.toStringAsFixed(2)}%'),
     );
   }
 
@@ -108,13 +121,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
     if (shouldReset != null && shouldReset) {
       _resetStatistics();
-      setState(() {}); // Update the state to reflect the changes
     }
   }
 
-
   void _resetStatistics() {
     UserData.resetStatistics();
-    setState(() {}); // Update the state to reflect the changes
+    _refreshUserData(); // Refresh the user data after resetting statistics
   }
 }

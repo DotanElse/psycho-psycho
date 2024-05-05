@@ -12,6 +12,7 @@ class UserData {
   static Future<void> updateScore(String subject, bool correct) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int curr;
+    subject = subject.trim();
     if(subject == 'm')
       {
         curr = prefs.getInt(totalQuestionsMathKey) ?? 0;

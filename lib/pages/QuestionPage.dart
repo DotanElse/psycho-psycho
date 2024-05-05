@@ -150,9 +150,8 @@ class _QuestionPageState extends State<QuestionPage> {
   void submitAnswer() {
     setState(() {
       answerSubmitted = true;
-      UserData.updateScore(widget.subject, selectedAnswer == currentQuestion!.correct);
+      UserData.updateScore(currentQuestion!.subject, selectedAnswer == currentQuestion!.correct);
       //Collect statistics here
-      print("Answer Submitted");
       transformationController.value = Matrix4.identity(); // Reset transformation
     });
   }
