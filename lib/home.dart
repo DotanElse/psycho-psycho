@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'pages/home_body.dart';
 import 'pages/analytics_body.dart';
 
@@ -10,6 +11,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void ChangeOrientation(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+    } else {
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    }
+  }
+
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
@@ -40,9 +50,16 @@ class _HomePageState extends State<HomePage> {
         'PsychoPsycho',
         style: TextStyle(color: theme.colorScheme.onPrimary),
       ),
+      actions: [
+      IconButton(
+      icon: Icon(Icons.rotate_left),
+      onPressed: () => ChangeOrientation(context),
+      ),
+      ],
       backgroundColor: theme.colorScheme.primary,
       centerTitle: true,
     );
+
   }
 
   Widget bottomNavBar(ThemeData theme) {

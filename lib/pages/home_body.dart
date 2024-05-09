@@ -1,92 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:psycho_psycho/pages/QuestionPage.dart';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Text block
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Text(
-            'Choose a subject:',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: Column(
+        children: [
+          SizedBox(height: 10),
+          Expanded(
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuestionPage(subject: 'a')),
+                    );
+                  },
+                  child: ColoredBlock(
+                    color: Colors.lightBlue,
+                    description: "תרגול כל השאלות",
+                    svgPath: "assets/icons/all.svg",
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuestionPage(subject: 'm')),
+                    );
+                  },
+                  child: ColoredBlock(
+                    color: Colors.orangeAccent,
+                    description: "תרגול שאלות במתמטיקה",
+                    svgPath: "assets/icons/math.svg",
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuestionPage(subject: 'h')),
+                    );
+                  },
+                  child: ColoredBlock(
+                    color: Colors.lightGreen,
+                    description: "תרגול שאלות בעברית",
+                    svgPath: "assets/icons/hebrew.svg",
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuestionPage(subject: 'e')),
+                    );
+                  },
+                  child: ColoredBlock(
+                    color: Colors.redAccent,
+                    description: "תרגול שאלות באנגלית",
+                    svgPath: "assets/icons/english.svg",
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  // Navigate to the QuestionPage with subject 'a' when the black block is tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'a')),
-                  );
-                },
-                child: ColoredBlock(
-                  color: Colors.lightBlue,
-                  description: "תרגול כל השאלות",
-                  svgPath: "assets/icons/all.svg",
-                ),
-              ),
-              SizedBox(height: 10,),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to the QuestionPage with subject 'm' when the red block is tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'm')),
-                  );
-                },
-                child: ColoredBlock(
-                  color: Colors.orangeAccent,
-                  description: "תרגול שאלות במתמטיקה",
-                  svgPath: "assets/icons/math.svg",
-                ),
-              ),
-              SizedBox(height: 10,),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to the QuestionPage with subject 'h' when the green block is tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'h')),
-                  );
-                },
-                child: ColoredBlock(
-                  color: Colors.lightGreen,
-                  description: "תרגול שאלות בעברית",
-                  svgPath: "assets/icons/hebrew.svg",
-                ),
-              ),
-              SizedBox(height: 10,),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to the QuestionPage with subject 'e' when the yellow block is tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuestionPage(subject: 'e')),
-                  );
-                },
-                child: ColoredBlock(
-                  color: Colors.redAccent,
-                  description: "תרגול שאלות באנגלית",
-                  svgPath: "assets/icons/english.svg",
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
+
 
 class ColoredBlock extends StatelessWidget {
   final Color color;

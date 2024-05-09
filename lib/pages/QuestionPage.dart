@@ -35,7 +35,6 @@ class _QuestionPageState extends State<QuestionPage> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _timer.cancel();
     super.dispose();
   }
@@ -58,6 +57,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
   void loadRandomQuestion() {
     currentQuestion = questionLoader.getRandomQuestion();
+    print("current question id is:${currentQuestion!.id}:");
     setState(() {
       transformationController.value = Matrix4.identity(); // Reset transformation
       answerSubmitted = false; // Reset answer submitted state
@@ -98,11 +98,11 @@ class _QuestionPageState extends State<QuestionPage> {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.rotate_left), // Choose the appropriate icon for orientation change
+            icon: const Icon(Icons.rotate_left), // Choose the appropriate icon for orientation change
             onPressed: ChangeOrientation, // Call the function when the button is clicked
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
             child: CircularProgressIndicator(
               value: _start / 60, // Use _start as the countdown progress
               backgroundColor: Colors.grey[300],
@@ -120,12 +120,12 @@ class _QuestionPageState extends State<QuestionPage> {
             child: Image.asset(
               height: MediaQuery.of(context).orientation == Orientation.portrait
                   ? MediaQuery.of(context).size.height * 0.3 // Adjust the height for portrait mode
-                  : MediaQuery.of(context).size.width * 0.2, // Adjust the height for landscape mode
+                  : MediaQuery.of(context).size.width * 0.18, // Adjust the height for landscape mode
               'assets/questions_pics/${currentQuestion!.id}.jpg',
               fit: BoxFit.contain,
             ),
           ),
-          SizedBox(height: 16.0), // Adjust the spacing between the image and buttons
+          SizedBox(height: MediaQuery.of(context).size.height * 0.05), // Adjust the spacing between the image and buttons
           MediaQuery.of(context).orientation == Orientation.portrait
               ? Column(
             children: [
@@ -140,7 +140,7 @@ class _QuestionPageState extends State<QuestionPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 16.0), // Adjust the spacing between rows
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03), // Adjust the spacing between rows
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -171,7 +171,7 @@ class _QuestionPageState extends State<QuestionPage> {
               ),
             ],
           ),
-          SizedBox(height: 16.0), // Adjust the spacing before the submit button
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03), // Adjust the spacing before the submit button
           Center(
             child: SizedBox(
               width: MediaQuery.sizeOf(context).width * 0.4,
@@ -198,7 +198,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
   Widget buildAnswerOption(String optionLetter) {
     Color selectedBorderColor = Colors.black; // Border color for selected button
-    double borderWidth = 4.0; // Border width
+    double borderWidth = MediaQuery.of(context).size.height * 0.005; // Border width
     Color? disabledColor = Colors.grey;
     if (answerSubmitted) {
       if (optionLetter == selectedAnswer) {
@@ -222,7 +222,7 @@ class _QuestionPageState extends State<QuestionPage> {
         disabledBackgroundColor: disabledColor,
         minimumSize: MediaQuery.of(context).orientation == Orientation.portrait
             ? Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.15)
-            : Size(MediaQuery.of(context).size.width * 0.2, MediaQuery.of(context).size.height * 0.1),
+            : Size(MediaQuery.of(context).size.height * 0.35, MediaQuery.of(context).size.width * 0.05),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.05), // Adjust borderRadius as needed
           side: BorderSide(
@@ -237,7 +237,7 @@ class _QuestionPageState extends State<QuestionPage> {
           color: Theme.of(context).colorScheme.onPrimaryContainer,
           fontSize: MediaQuery.of(context).orientation == Orientation.portrait
             ? MediaQuery.of(context).size.width * 0.15 // Adjust the height for portrait mode
-            : MediaQuery.of(context).size.width * 0.05, // Adjust the height for landscape mode
+            : MediaQuery.of(context).size.width * 0.02, // Adjust the height for landscape mode
         ),
       ),
     );
