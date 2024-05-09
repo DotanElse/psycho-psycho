@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:psycho_psycho/utils/question.dart';
 import 'package:psycho_psycho/utils/QuestionLoader.dart';
 import 'package:psycho_psycho/utils/UserData.dart';
@@ -34,6 +35,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _timer.cancel();
     super.dispose();
   }
@@ -41,6 +43,17 @@ class _QuestionPageState extends State<QuestionPage> {
   void loadQuestions() async {
     await questionLoader.loadQuestions(widget.subject);
     loadRandomQuestion();
+  }
+
+  void ChangeOrientation() {
+    transformationController.value = Matrix4.identity(); // Reset transformation
+    if(MediaQuery.of(context).orientation == Orientation.portrait)
+    {
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+    }else
+    {
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    }
   }
 
   void loadRandomQuestion() {
@@ -83,8 +96,11 @@ class _QuestionPageState extends State<QuestionPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Question Page'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.rotate_left), // Choose the appropriate icon for orientation change
+            onPressed: ChangeOrientation, // Call the function when the button is clicked
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircularProgressIndicator(
@@ -102,13 +118,43 @@ class _QuestionPageState extends State<QuestionPage> {
             transformationController: transformationController,
             constrained: true, // Locks the movement in the viewport
             child: Image.asset(
-              height: MediaQuery.sizeOf(context).height * 0.3,
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? MediaQuery.of(context).size.height * 0.3 // Adjust the height for portrait mode
+                  : MediaQuery.of(context).size.width * 0.2, // Adjust the height for landscape mode
               'assets/questions_pics/${currentQuestion!.id}.jpg',
               fit: BoxFit.contain,
             ),
           ),
           SizedBox(height: 16.0), // Adjust the spacing between the image and buttons
-          Row(
+          MediaQuery.of(context).orientation == Orientation.portrait
+              ? Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    child: buildAnswerOption('1'),
+                  ),
+                  SizedBox(
+                    child: buildAnswerOption('2'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0), // Adjust the spacing between rows
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    child: buildAnswerOption('3'),
+                  ),
+                  SizedBox(
+                    child: buildAnswerOption('4'),
+                  ),
+                ],
+              ),
+            ],
+          )
+              : Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
@@ -117,12 +163,6 @@ class _QuestionPageState extends State<QuestionPage> {
               SizedBox(
                 child: buildAnswerOption('2'),
               ),
-            ],
-          ),
-          SizedBox(height: 16.0), // Adjust the spacing between rows
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
               SizedBox(
                 child: buildAnswerOption('3'),
               ),
@@ -134,8 +174,8 @@ class _QuestionPageState extends State<QuestionPage> {
           SizedBox(height: 16.0), // Adjust the spacing before the submit button
           Center(
             child: SizedBox(
-              width: MediaQuery.sizeOf(context).height * 0.2,
-              height: MediaQuery.sizeOf(context).height * 0.05,
+              width: MediaQuery.sizeOf(context).width * 0.4,
+              height: MediaQuery.sizeOf(context).height * 0.1,
               child: ElevatedButton(
                 onPressed: answerSubmitted ? loadRandomQuestion : submitAnswer,
                 child: Text(answerSubmitted ? 'שאלה הבאה' : 'שליחה'),
@@ -180,7 +220,9 @@ class _QuestionPageState extends State<QuestionPage> {
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer, // Use your preferred color here
         disabledBackgroundColor: disabledColor,
-        minimumSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.width * 0.3), // Adjust button size as needed
+        minimumSize: MediaQuery.of(context).orientation == Orientation.portrait
+            ? Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.15)
+            : Size(MediaQuery.of(context).size.width * 0.2, MediaQuery.of(context).size.height * 0.1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.05), // Adjust borderRadius as needed
           side: BorderSide(
@@ -193,7 +235,9 @@ class _QuestionPageState extends State<QuestionPage> {
         optionLetter,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onPrimaryContainer,
-          fontSize: MediaQuery.of(context).size.width * 0.15, // Adjust fontSize as needed
+          fontSize: MediaQuery.of(context).orientation == Orientation.portrait
+            ? MediaQuery.of(context).size.width * 0.15 // Adjust the height for portrait mode
+            : MediaQuery.of(context).size.width * 0.05, // Adjust the height for landscape mode
         ),
       ),
     );
